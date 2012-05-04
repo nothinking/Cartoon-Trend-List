@@ -5,8 +5,9 @@
 
 var express = require('express')
   , routes = require('./routes')
-  , http = require('http');
-
+  , http = require('http')
+  , restler = require('./node_modules/restler');
+  
 var app = express();
 
 app.configure(function(){
@@ -25,6 +26,14 @@ app.configure('development', function(){
 });
 
 app.get('/', routes.index);
+
+app.get('/proxy', function(req, res) {
+    restler.get('http://m.cartoon.media.daum.net/data/mobile/webtoon?sort=update&page_size=20&week=all&page_no=1&1336094921908', {
+        }).on('complete', function (data) {
+                console.log(data)
+               res.json(data)
+            });
+});
 
 http.createServer(app).listen(3000);
 
