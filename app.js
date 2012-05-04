@@ -28,7 +28,7 @@ app.configure('development', function(){
 app.get('/', routes.index);
 
 
-// Cartoon API
+// Cartoon API Forke
 var apiUrl = "http://m.cartoon.media.daum.net/data/mobile/webtoon";
 app.get('/proxy', function(req, res) {
 	var page_size = req.param("page_size") || 1;
