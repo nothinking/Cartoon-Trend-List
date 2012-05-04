@@ -27,12 +27,24 @@ app.configure('development', function(){
 
 app.get('/', routes.index);
 
+
+// Cartoon API
+var apiUrl = "http://m.cartoon.media.daum.net/data/mobile/webtoon";
 app.get('/proxy', function(req, res) {
-    restler.get('http://m.cartoon.media.daum.net/data/mobile/webtoon?sort=update&page_size=20&week=all&page_no=1&1336094921908', {
-        }).on('complete', function (data) {
-                console.log(data)
-               res.json(data)
-            });
+	var page_size = req.param("page_size") || 1;
+	var page_no = req.param("page_no") || 1;	
+ 	var sort = req.param("sort") || "update";
+ 	var week = req.param("week") || "all";
+	var seed = +new Date();	
+	var url = apiUrl+"?page_size="+page_size+"&page_no="+page_no+"&sort="+sort+"&week="+week+"&"+seed;	
+	console.log(url);			
+    restler.get(url, {}).on('complete', function (data) {
+    	if(data.result.status == "200"){
+	    	res.json(data);
+    	}else{
+	    	res.json({result : {status : data.result.status , message : "error"}});
+	    }	
+	});
 });
 
 http.createServer(app).listen(3000);
